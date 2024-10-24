@@ -1,38 +1,38 @@
-# Anthropic Computer Use Demo
+# Anthropic 计算机使用演示
 
-> [!CAUTION]
-> Computer use is a beta feature. Please be aware that computer use poses unique risks that are distinct from standard API features or chat interfaces. These risks are heightened when using computer use to interact with the internet. To minimize risks, consider taking precautions such as:
+> [!注意]
+> 计算机使用是一个测试版功能。请注意，计算机使用功能带来的风险与标准 API 功能或聊天界面的风险有所不同。在使用计算机功能与互联网交互时，这些风险会更加显著。为了最小化风险，请考虑采取以下预防措施：
 >
-> 1. Use a dedicated virtual machine or container with minimal privileges to prevent direct system attacks or accidents.
-> 2. Avoid giving the model access to sensitive data, such as account login information, to prevent information theft.
-> 3. Limit internet access to an allowlist of domains to reduce exposure to malicious content.
-> 4. Ask a human to confirm decisions that may result in meaningful real-world consequences as well as any tasks requiring affirmative consent, such as accepting cookies, executing financial transactions, or agreeing to terms of service.
+> 1. 使用具有最小权限的专用虚拟机或容器，以防止直接系统攻击或意外。
+> 2. 避免让模型接触敏感数据（如账户登录信息），以防信息泄露。
+> 3. 将互联网访问限制在允许名单内的域名范围内，以减少接触恶意内容的风险。
+> 4. 对于可能产生实际影响的决策，以及任何需要明确同意的任务（如接受 cookie、执行金融交易或同意服务条款），都应请求人工确认。
 >
-> In some circumstances, Claude will follow commands found in content even if it conflicts with the user's instructions. For example, instructions on webpages or contained in images may override user instructions or cause Claude to make mistakes. We suggest taking precautions to isolate Claude from sensitive data and actions to avoid risks related to prompt injection.
+> 在某些情况下，Claude 会执行在内容中发现的命令，即使这些命令与用户指令相冲突。例如，网页上的指令或图片中包含的指令可能会覆盖用户指令或导致 Claude 出错。我们建议采取预防措施，将 Claude 与敏感数据和操作隔离，以避免与提示注入相关的风险。
 >
-> Finally, please inform end users of relevant risks and obtain their consent prior to enabling computer use in your own products.
+> 最后，在您自己的产品中启用计算机使用功能之前，请告知最终用户相关风险并获得他们的同意。
 
-This repository helps you get started with computer use on Claude, with reference implementations of:
+本代码仓库帮助您开始使用 Claude 的计算机功能，包含以下参考实现：
 
-* Build files to create a Docker container with all necessary dependencies
-* A computer use agent loop using the Anthropic API, Bedrock, or Vertex to access the updated Claude 3.5 Sonnet model
-* Anthropic-defined computer use tools
-* A streamlit app for interacting with the agent loop
+* 用于创建包含所有必要依赖项的 Docker 容器的构建文件
+* 使用 Anthropic API、Bedrock 或 Vertex 访问更新后的 Claude 3.5 Sonnet 模型的计算机使用代理循环
+* Anthropic 定义的计算机使用工具
+* 用于与代理循环交互的 streamlit 应用
 
-Please use [this form](https://forms.gle/BT1hpBrqDPDUrCqo7) to provide feedback on the quality of the model responses, the API itself, or the quality of the documentation - we cannot wait to hear from you!
+请使用[此表单](https://forms.gle/BT1hpBrqDPDUrCqo7)提供关于模型响应质量、API 本身或文档质量的反馈 - 我们期待听到您的意见！
 
-> [!IMPORTANT]
-> The Beta API used in this reference implementation is subject to change. Please refer to the [API release notes](https://docs.anthropic.com/en/release-notes/api) for the most up-to-date information.
+> [!重要]
+> 本参考实现中使用的测试版 API 可能会发生变化。请参考 [API 发布说明](https://docs.anthropic.com/en/release-notes/api)获取最新信息。
 
-> [!IMPORTANT]
-> The components are weakly separated: the agent loop runs in the container being controlled by Claude, can only be used by one session at a time, and must be restarted or reset between sessions if necessary.
+> [!重要]
+> 各组件之间是弱分离的：代理循环在被 Claude 控制的容器中运行，每次只能被一个会话使用，如有必要必须在会话之间重启或重置。
 
-## Quickstart: running the Docker container
+## 快速入门：运行 Docker 容器
 
 ### Anthropic API
 
-> [!TIP]
-> You can find your API key in the [Anthropic Console](https://console.anthropic.com/).
+> [!提示]
+> 您可以在 [Anthropic 控制台](https://console.anthropic.com/)中找到您的 API 密钥。
 
 ```bash
 export ANTHROPIC_API_KEY=%your_api_key%
@@ -46,15 +46,15 @@ docker run \
     -it ghcr.io/anthropics/anthropic-quickstarts:computer-use-demo-latest
 ```
 
-Once the container is running, see the [Accessing the demo app](#accessing-the-demo-app) section below for instructions on how to connect to the interface.
+容器运行后，请参考下面的[访问演示应用](#访问演示应用)部分了解如何连接到界面。
 
 ### Bedrock
 
-You'll need to pass in AWS credentials with appropriate permissions to use Claude on Bedrock.
+您需要传入具有适当权限的 AWS 凭证才能在 Bedrock 上使用 Claude。
 
-You have a few options for authenticating with Bedrock. See the [boto3 documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html#environment-variables) for more details and options.
+您有几种方式可以与 Bedrock 进行身份验证。更多详情和选项请参见 [boto3 文档](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html#environment-variables)。
 
-#### Option 1: (suggested) Use the host's AWS credentials file and AWS profile
+#### 选项 1：（建议）使用主机的 AWS 凭证文件和 AWS 配置文件
 
 ```bash
 export AWS_PROFILE=<your_aws_profile>
@@ -71,9 +71,9 @@ docker run \
     -it ghcr.io/anthropics/anthropic-quickstarts:computer-use-demo-latest
 ```
 
-Once the container is running, see the [Accessing the demo app](#accessing-the-demo-app) section below for instructions on how to connect to the interface.
+容器运行后，请参考下面的[访问演示应用](#访问演示应用)部分了解如何连接到界面。
 
-#### Option 2: Use an access key and secret
+#### 选项 2：使用访问密钥和密钥
 
 ```bash
 export AWS_ACCESS_KEY_ID=%your_aws_access_key%
@@ -93,11 +93,11 @@ docker run \
     -it ghcr.io/anthropics/anthropic-quickstarts:computer-use-demo-latest
 ```
 
-Once the container is running, see the [Accessing the demo app](#accessing-the-demo-app) section below for instructions on how to connect to the interface.
+容器运行后，请参考下面的[访问演示应用](#访问演示应用)部分了解如何连接到界面。
 
 ### Vertex
 
-You'll need to pass in Google Cloud credentials with appropriate permissions to use Claude on Vertex.
+您需要传入具有适当权限的 Google Cloud 凭证才能在 Vertex 上使用 Claude。
 
 ```bash
 docker build . -t computer-use-demo
@@ -116,27 +116,27 @@ docker run \
     -it computer-use-demo
 ```
 
-Once the container is running, see the [Accessing the demo app](#accessing-the-demo-app) section below for instructions on how to connect to the interface.
+容器运行后，请参考下面的[访问演示应用](#访问演示应用)部分了解如何连接到界面。
 
-This example shows how to use the Google Cloud Application Default Credentials to authenticate with Vertex.
+此示例展示了如何使用 Google Cloud 应用程序默认凭证与 Vertex 进行身份验证。
 
-You can also set `GOOGLE_APPLICATION_CREDENTIALS` to use an arbitrary credential file, see the [Google Cloud Authentication documentation](https://cloud.google.com/docs/authentication/application-default-credentials#GAC) for more details.
+您也可以设置 `GOOGLE_APPLICATION_CREDENTIALS` 来使用任意凭证文件，详情请参见 [Google Cloud 身份验证文档](https://cloud.google.com/docs/authentication/application-default-credentials#GAC)。
 
-### Accessing the demo app
+### 访问演示应用
 
-Once the container is running, open your browser to [http://localhost:8080](http://localhost:8080) to access the combined interface that includes both the agent chat and desktop view.
+容器运行后，在浏览器中打开 [http://localhost:8080](http://localhost:8080) 访问包含代理聊天和桌面视图的组合界面。
 
-The container stores settings like the API key and custom system prompt in `~/.anthropic/`. Mount this directory to persist these settings between container runs.
+容器在 `~/.anthropic/` 中存储设置，如 API 密钥和自定义系统提示。挂载此目录可以在容器重启之间保持这些设置。
 
-Alternative access points:
+其他访问方式：
 
-- Streamlit interface only: [http://localhost:8501](http://localhost:8501)
-- Desktop view only: [http://localhost:6080/vnc.html](http://localhost:6080/vnc.html)
-- Direct VNC connection: `vnc://localhost:5900` (for VNC clients)
+- 仅 Streamlit 界面：[http://localhost:8501](http://localhost:8501)
+- 仅桌面视图：[http://localhost:6080/vnc.html](http://localhost:6080/vnc.html)
+- 直接 VNC 连接：`vnc://localhost:5900`（适用于 VNC 客户端）
 
-## Screen size
+## 屏幕大小
 
-Environment variables `WIDTH` and `HEIGHT` can be used to set the screen size. For example:
+可以使用环境变量 `WIDTH` 和 `HEIGHT` 设置屏幕大小。例如：
 
 ```bash
 docker run \
@@ -151,24 +151,24 @@ docker run \
     -it ghcr.io/anthropics/anthropic-quickstarts:computer-use-demo-latest
 ```
 
-We do not recommend sending screenshots in resolutions above [XGA/WXGA](https://en.wikipedia.org/wiki/Display_resolution_standards#XGA) to avoid issues related to [image resizing](https://docs.anthropic.com/en/docs/build-with-claude/vision#evaluate-image-size).
-Relying on the image resizing behavior in the API will result in lower model accuracy and slower performance than implementing scaling in your tools directly. The `computer` tool implementation in this project demonstrates how to scale both images and coordinates from higher resolutions to the suggested resolutions.
+我们不建议发送分辨率高于 [XGA/WXGA](https://en.wikipedia.org/wiki/Display_resolution_standards#XGA) 的截图，以避免与[图像调整大小](https://docs.anthropic.com/en/docs/build-with-claude/vision#evaluate-image-size)相关的问题。
+相比依赖 API 中的图像调整大小功能，直接在工具中实现缩放会获得更高的模型准确性和更快的性能。本项目中的 `computer` 工具实现演示了如何将图像和坐标从更高分辨率缩放到建议的分辨率。
 
-## Development
+## 开发
 
 ```bash
-./setup.sh  # configure venv, install development dependencies, and install pre-commit hooks
-docker build . -t computer-use-demo:local  # manually build the docker image (optional)
+./setup.sh  # 配置 venv、安装开发依赖项和安装预提交钩子
+docker build . -t computer-use-demo:local  # 手动构建 docker 镜像（可选）
 export ANTHROPIC_API_KEY=%your_api_key%
 docker run \
     -e ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY \
-    -v $(pwd)/computer_use_demo:/home/computeruse/computer_use_demo/ `# mount local python module for development` \
+    -v $(pwd)/computer_use_demo:/home/computeruse/computer_use_demo/ `# 挂载本地 python 模块用于开发` \
     -v $HOME/.anthropic:/home/computeruse/.anthropic \
     -p 5900:5900 \
     -p 8501:8501 \
     -p 6080:6080 \
     -p 8080:8080 \
-    -it computer-use-demo:local  # can also use ghcr.io/anthropics/anthropic-quickstarts:computer-use-demo-latest
+    -it computer-use-demo:local  # 也可以使用 ghcr.io/anthropics/anthropic-quickstarts:computer-use-demo-latest
 ```
 
-The docker run command above mounts the repo inside the docker image, such that you can edit files from the host. Streamlit is already configured with auto reloading.
+上面的 docker run 命令将代码仓库挂载到 docker 镜像内部，这样您就可以从主机编辑文件。Streamlit 已经配置了自动重载功能。
